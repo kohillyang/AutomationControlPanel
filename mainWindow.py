@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
-from widgets import MapWidget,LocPlotWidget,ControlWidget
+from widgets import MapWidget,LocPlotWidget,ControlWidget,ConsoleWidget
 import ctypes
 from ctypes import *
 from communicationManger import ComManger
@@ -26,15 +26,23 @@ class App(QMainWindow):
         centralWidget = QWidget(self)
 
         controlWidget  = ControlWidget(self)#
-        # locWidget = LocPlotWidget(controlWidget,self)
+        consoleWidget = ConsoleWidget(self)
+
+        locWidget = LocPlotWidget()
         mapWidget = MapWidget(self)
+        
+        locWidget.resize(640,480)
+
+
+        map_loc_tabWidget = QTabWidget(self)
+        map_loc_tabWidget.addTab(mapWidget,"Realtime map")
+        map_loc_tabWidget.addTab(locWidget,"Plot manager")
 
         layout = QGridLayout(self)
 
         vlayout = QVBoxLayout(self)
-        vlayout.addWidget(mapWidget)
-        # vlayout.addWidget(locWidget)
-
+        vlayout.addWidget(map_loc_tabWidget)
+        vlayout.addWidget(consoleWidget)
         layout.addLayout(vlayout,0,0)
         layout.addWidget(controlWidget,0,1)
 
@@ -52,9 +60,10 @@ class App(QMainWindow):
         self.ui.actionUpdate_Astart.triggered.connect(self.updateAstart)
         self.updateAstart()
 
-        ComManger.instance().signalSerialData.connect(controlWidget.setText_serial)
-        ComManger.instance().signalbeatData.connect(controlWidget.setText_beat)
+        ComManger.instance().signalSerialData.connect(consoleWidget.addText1)
+        ComManger.instance().signalbeatData.connect(consoleWidget.addText2)
         self.show()
+        locWidget.show()        
     def updateAstart(self):
         print("info","update astart.")
         dll = ctypes.CDLL("cpp/astart.dll")

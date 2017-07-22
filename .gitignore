@@ -1,2 +1,4 @@
 .vscode
 cpp/*.dll
+
+__pycache__/

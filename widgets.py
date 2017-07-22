@@ -10,10 +10,13 @@ import ctypes
 
 pathPoints = []
 class LocPlotWidget(pg.PlotWidget):
-    def __init__(self,controlWidget,parent=None):
+    def __init__(self,parent=None):
         super(LocPlotWidget,self).__init__(parent=parent)
-        self.controlwidget = controlWidget
+        bcolor = QColor(250,250,250,255)
+        self.setBackground(bcolor)
+
         l = pg.GraphicsLayout(border=(0,0,0))   
+        l.setBorder(bcolor)        
         self.setCentralItem(l)  
         self.setMinimumSize(640,140)    
 
@@ -128,11 +131,6 @@ class ControlWidget(QWidget):
     signal_ip_changed = pyqtSignal()       
     def updatestm32Ip(self,ip):
         self.ui.lineEdit_stm32_ip.setText(str(ip))
-    def setText_beat(self,text1):
-        self.ui.textBrowser_beat.append(text1)
-    def setText_serial(self,text1):
-        self.ui.textBrowser_serial.append(text1)        
-        print("setTxte",text1)
     def __init__(self,parent = None):
         super(ControlWidget,self).__init__(parent = parent);
         # self.setFixedWidth(240)
@@ -194,3 +192,13 @@ class ControlWidget(QWidget):
             print("info,send path Points.s",x,y)
         else:
             print(None,"警告","似乎在屏幕上没有找到点哎……");                
+class ConsoleWidget(QWidget):
+    def __init__(self,parent=None):
+        super(ConsoleWidget,self).__init__(parent)
+        from ui_messages_console import Ui_Form
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
+    def addText1(self,text):
+        self.ui.textBrowser.append(text)
+    def addText2(self,text):
+        self.ui.textBrowser_2.append(text)
